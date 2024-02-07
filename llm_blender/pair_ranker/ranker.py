@@ -789,8 +789,9 @@ class CrossCompareReranker(nn.Module):
                 loss += _outputs['loss']
                 preds = _outputs['logits']
                 compare_results[:, i, j] = preds
-            average_values = compare_results[:, i, :].sum(axis=1)
-            compare_results[:, i, i] = average_values / len(n_candidates)
+            if i in reference_set:
+                average_values = compare_results[:, i, :].sum(axis=1)
+                compare_results[:, i, i] = average_values / len(n_candidates)
 
         outputs['loss'] = loss / (n_candidates * (n_candidates - 1))
         outputs['logits'] = compare_results # [batch_size, n_candidates, n_candidates]
