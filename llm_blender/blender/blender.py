@@ -220,8 +220,7 @@ class Blender:
             for batch in tqdm(iter(dataloader), desc="Ranking candidates", disable=not self.blender_config.use_tqdm):
                 batch = {k: v.to(self.ranker_config.device) for k, v in batch.items() if v is not None}
                 if self.ranker_config.ranker_type == "pairranker":
-                    outputs = self.ranker._bubble_predict(**batch, num_runs=16)
-                    print('outputs=', outputs)
+                    outputs = self.ranker._full_predict(**batch)
                     preds = outputs['logits'].detach().cpu().numpy()
                     batch_scores = get_scores_from_cmps(preds)
                 elif self.ranker_config.ranker_type in ["summareranker", "simcls"]:
