@@ -742,6 +742,7 @@ class CrossCompareReranker(nn.Module):
         candidate_ids,
         candidate_attention_mask,
         scores=None,
+        num_runs=16,
     ):
         """
             Do predict over each group of candidates
@@ -764,8 +765,9 @@ class CrossCompareReranker(nn.Module):
         loss = torch.tensor(0.0).to(device)
 
         compare_results = torch.zeros(batch_size, n_candidates, n_candidates, device=device)
+        reference_set = list(np.random.choice(n_candidates, size=min(num_runs, n_candidates), replace=False))
         for i in range(n_candidates):
-            for j in range(n_candidates):
+            for j in range(reference_set):
                 if i == j:
                     continue
                 left_cand_ids = candidate_ids[:, i]
