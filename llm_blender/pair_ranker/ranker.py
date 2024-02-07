@@ -767,7 +767,7 @@ class CrossCompareReranker(nn.Module):
         compare_results = torch.zeros(batch_size, n_candidates, n_candidates, device=device)
         reference_set = list(np.random.choice(n_candidates, size=min(num_runs, n_candidates), replace=False))
         for i in range(n_candidates):
-            for j in range(reference_set):
+            for j in reference_set:
                 if i == j:
                     continue
                 left_cand_ids = candidate_ids[:, i]
